@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>The DN-Learning Blog</title>
+	<subtitle>Blog / Dziennik z notatkami IT</subtitle>
+	
+	<link href="https://dn-learning.github.io/feed/feed.xml" rel="self"/>
+	<link href="https://dn-learning.github.io/"/>
+	<updated>2020-07-19T02:00:00+02:00</updated>
+	<id>https://myurl.com/</id>
+	<author>
+		<name>Damian Nowak</name>
+		<email></email>
+	</author>
+	
+	<entry>
+		<title>Publikacja stron wygenerowanych w 11ty na github pages</title>
+		<link href="https://dn-learning.github.io/posts/firstpost/"/>
+		<updated>2020-07-19T02:00:00+02:00</updated>
+		<id>https://dn-learning.github.io/posts/firstpost/</id>
+		<content type="html">&lt;p&gt;Github pages są super, niestety w dokumentacji i w poradnikach związanych z 11ty mówi się głównie o publikacji na netlify, ew. s3 albo innym podobnym rozwiązaniu. W przypadku gh-pages nie natrafiłem na rozwiązania inne niż opierające się o githubowe &lt;em&gt;actions&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;A przecież jest jeszcze inne, w moim przekonaniu prostsze rozwiązanie - &lt;strong&gt;git push&lt;/strong&gt; bezpośrednio do repozytorium służącego do publikacji naszych stron. Pomysł jak to zrobić znalazłem w dokumentacji &lt;strong&gt;Jigsaw&lt;/strong&gt; - generatora stron statycznych opartego o elementy ze środowiska PHP / Laravel.&lt;/p&gt;
+&lt;p&gt;Po paru próbach i przy założeniu, że chcę mieć na gałęzi &lt;strong&gt;master&lt;/strong&gt; zmiany w kodzie samego bloga, a w osobnym repozytorium w sam blog, podział repozytoriów wygląda następująco:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;repozytorium z kodem, gałąź &lt;strong&gt;master&lt;/strong&gt; - zmiany w kodzie bloga,&lt;/li&gt;
+&lt;li&gt;repozytorium z kodem, gałąź &lt;strong&gt;publishing&lt;/strong&gt; - gałąź na której będę buduję statyczną zawartość strony i skąd jest robiony za pomocą &lt;strong&gt;git subtree split&lt;/strong&gt; zrzut do gałęzi, z której kod jest wysyłany do osobnego repozytorium, w którym jest zaktywowane github pages&lt;/li&gt;
+&lt;li&gt;repozytorium z blogiem, gałąź gh-pages - tu jest publikowany blog&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Poniżej opis krok po kroku jak to zrobić.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Budujemy strony statyczne na gałęzi &lt;strong&gt;publishing&lt;/strong&gt;, commit zmian&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Wydzielamy zbudowane strony (domyślnie w katalogu &lt;strong&gt;_site&lt;/strong&gt;) do osobnej gałęzi - zawierającej tylko te zbudowane strony&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;git subtree split --prefix _site -b &amp;lt;nazwa_brancha_gh_pages&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;Robimy checkout do nowej gałęzi, push do gałęzi repozytorium, wskazując którą lokalną gałąź do której zdalnej wysyłamy - gdzie publikujemy nasze strony&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;git push -f &amp;lt;nazwa_zdalnego_repo_gh_pages&amp;gt; &amp;lt;nazwa_lokalnego_brancha_gh_pages&amp;gt;:&amp;lt;nazwa_zdalnego_brancha_gh_pages&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ol start=&quot;4&quot;&gt;
+&lt;li&gt;Usuwamy lokalnie gałąź gh-pages&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;git branch -D &amp;lt;nazwa_brancha_gh_pages&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Flaga &lt;strong&gt;-f&lt;/strong&gt; powyżej raczej będzie konieczna - w publikacji mniej istotna jest (dla mnie osobiście) historia, w swoim modelu publikacji w jednym repo trzymam kod źródłowy stron, w innym kod html/css/js stron do publikacji, każde jest podłączone do repo o innej nazwie (jedno origin, drugie blog).&lt;/p&gt;
+</content>
+	</entry>
+</feed>
